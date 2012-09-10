@@ -13,7 +13,7 @@ def get_saves_dir():
       saves = os.path.expanduser("~/AppData/Roaming/crawl/saves/")
   elif sys.platform == 'darwin':
     saves = os.path.expanduser("~/Library/Application Support/Dungeon Crawl Stone Soup/saves/")
-  if sys.platform.startswith('linux'):
+  elif sys.platform.startswith('linux'):
     saves = os.path.expanduser("~/.crawl/saves/")
   else:
     saves = os.path.expanduser("~/.crawl/saves/")
@@ -90,3 +90,5 @@ def main(arguments):
 
 if __name__ == '__main__':
     main(sys.argv[1:])
+    if os.name == 'nt':
+        raw_input('Press Enter to exit')
