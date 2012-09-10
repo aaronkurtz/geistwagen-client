@@ -43,10 +43,24 @@ def upload_file(bone):
       return False
 
 def get_exclusions(bones):
-  pass
+    exclude = ''
+    for bone in bones:
+      exclude += (os.path.basename(bone).sep('.')[1]) + '.'
+    return exclude
 
-def download_file(exclude):
-  pass
+def download_file(saves_dir, exclude):
+  try:
+      response = urllib2.urlopen(SERVER+'bones?exclude='+exclude)
+      data = response.read()
+      name = response.headers['Content-Disposition'].partition('bones.')[2]
+      if not name:
+          return False
+      new_bones = open(os.path.join(saves_dir, 'bones.' + name), 'wb')
+      new_bones.write(data)
+      new_bones.close()
+      return name
+  except:
+    return False
 
 def automatic(saves_dir):  
   if not check_lock(saves_dir):
@@ -62,9 +76,9 @@ def automatic(saves_dir):
     for bone in bones:
         if os.path.getmtime(bone) > last_ran:
             if upload_file(bone):
-                dl_results = download_file(exclude)
+                dl_results = download_file(saves_dir, exclude)
                 if dl_results:
-                    exclude.append(dl_results)
+                    exclude += dl_results + '.'
                     os.remove(bone)
 
 def main(arguments):
