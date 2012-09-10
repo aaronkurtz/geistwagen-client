@@ -1,7 +1,6 @@
 import os,sys,glob
 import urllib
 import urllib2
-from pysoup import verify_bones_file
 
 SERVER = "https://geistwagen-hardsun.rhcloud.com/"
 LOCK = "geist.lck"
@@ -20,12 +19,12 @@ def get_saves_dir():
     saves = os.path.expanduser("~/.crawl/saves/")
   if not os.path.isdir(saves):
       raise Exception("Crawl saves directory not found!")
-  if not os.path.isdir(os.path.join(saves,'db'): #That sucker should always be there
+  if not os.path.isdir(os.path.join(saves,'db')): #That sucker should always be there
       raise Exception("Crawl saves directory appears to be empty")
   return saves      
 
 def check_lock(saves):
-  return os.path.exists(os.path.join(saves,LOCK)
+  return os.path.exists(os.path.join(saves,LOCK))
 
 def upload_file(bone):
   level = os.path.basename(bone)
@@ -45,7 +44,7 @@ def upload_file(bone):
 def get_exclusions(bones):
     exclude = ''
     for bone in bones:
-      exclude += (os.path.basename(bone).sep('.')[1]) + '.'
+      exclude += (os.path.basename(bone).split('.')[1]) + '.'
     return exclude
 
 def download_file(saves_dir, exclude):
@@ -65,13 +64,13 @@ def download_file(saves_dir, exclude):
 def automatic(saves_dir):  
   if not check_lock(saves_dir):
     open(os.path.join(saves_dir,LOCK),'w').close() #geist.lock written
-    bones = glob.glob(os.path.join(saves,'bones.*')
+    bones = glob.glob(os.path.join(saves_dir,'bones.*'))
     for bone in bones:
         upload_file(bone)
   else:
-    last_ran = os.path.getmtime(os.path.join(saves, LOCK))
-    os.utime(os.path.join(saves, LOCK))
-    bones = glob.glob(os.path.join(saves,'bones.*')
+    last_ran = os.path.getmtime(os.path.join(saves_dir, LOCK))
+    os.utime(os.path.join(saves_dir, LOCK), None)
+    bones = glob.glob(os.path.join(saves_dir,'bones.*'))
     exclude = get_exclusions(bones)
     for bone in bones:
         if os.path.getmtime(bone) > last_ran:
