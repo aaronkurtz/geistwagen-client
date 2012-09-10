@@ -12,15 +12,18 @@ Inspired by Nethack's Hearse.
 
 HOW? 
 
-Short answer:
-Run geistwagen, which starts Dungeon Crawl for you. 
 
-Quit and restart after you die. That's it.
-#TODO Upload bones files after death with magic. Lua magic?
+Short answer:
+
+Run geistwagen. If you're playing on Windows and didn't install the game,
+stick it in your Stone Soup folder first.
+
+Quit and run it after you die. That's it.
+
 
 Long answer:
-Geistwagen looks for a geist.lck file when it starts. If it
-doesn't find one, it uploads every bones file you have.
+Geistwagen looks for a geist.lck file in your saves directory when it starts.
+If it doesn't find one, it uploads every bones file you have and makes one.
 
 If it does find one, it find any bones files newer than the
 lock file. When it finds some, they're uploaded and then
