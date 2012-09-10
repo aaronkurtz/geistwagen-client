@@ -53,7 +53,7 @@ def get_exclusions(bones):
 
 def download_file(saves_dir, exclude):
   try:
-      response = urllib2.urlopen(SERVER+'bones?exclude='+exclude)
+      response = urllib2.urlopen(SERVER+'bones?delete=True&exclude='+exclude)
       data = response.read()
       name = response.headers['Content-Disposition'].partition('bones.')[2]
       if not name:
