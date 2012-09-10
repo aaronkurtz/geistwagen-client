@@ -5,6 +5,8 @@ import urllib2
 SERVER = "https://geistwagen-hardsun.rhcloud.com/"
 LOCK = "geist.lck"
 
+#TODO provide feedback to user
+
 def get_saves_dir():
   if sys.platform == 'win32' or sys.platform == 'cygwin':
     if os.path.isdir("saves"): #Loose folder
@@ -37,6 +39,7 @@ def upload_file(bone):
   except:
     return False
   if response.msg == 'OK':
+      print "Uploaded " + level
       return True #Upload success
   else:
       return False
@@ -57,17 +60,20 @@ def download_file(saves_dir, exclude):
       new_bones = open(os.path.join(saves_dir, 'bones.' + name), 'wb')
       new_bones.write(data)
       new_bones.close()
+      print "Downloaded " + name
       return name
   except:
     return False
 
 def automatic(saves_dir):  
   if not check_lock(saves_dir):
+    print "First time running Geistwagen, uploading bones files"
     open(os.path.join(saves_dir,LOCK),'w').close() #geist.lock written
     bones = glob.glob(os.path.join(saves_dir,'bones.*'))
     for bone in bones:
         upload_file(bone)
   else:
+    print "Uploading new bones files, downloading replacements"
     last_ran = os.path.getmtime(os.path.join(saves_dir, LOCK))
     os.utime(os.path.join(saves_dir, LOCK), None)
     bones = glob.glob(os.path.join(saves_dir,'bones.*'))
