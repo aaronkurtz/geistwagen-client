@@ -67,18 +67,18 @@ def download_file(saves_dir, exclude):
     return False
 
 def automatic(saves_dir):  
+    bones = glob.glob(os.path.join(saves_dir,'bones.*'))
+    exclude = get_exclusions(bones)
   if not check_lock(saves_dir):
     print "First time running Geistwagen, uploading bones files"
-    open(os.path.join(saves_dir,LOCK),'w').close() #geist.lock written
-    bones = glob.glob(os.path.join(saves_dir,'bones.*'))
     for bone in bones:
         upload_file(bone)
+    download_file(saves_dir, exclude) #Everyone gets one free
+    open(os.path.join(saves_dir,LOCK),'w').close() #geist.lock written
   else:
     print "Uploading new bones files, downloading replacements"
     last_ran = os.path.getmtime(os.path.join(saves_dir, LOCK))
     os.utime(os.path.join(saves_dir, LOCK), None)
-    bones = glob.glob(os.path.join(saves_dir,'bones.*'))
-    exclude = get_exclusions(bones)
     for bone in bones:
         if os.path.getmtime(bone) > last_ran:
             if upload_file(bone):
