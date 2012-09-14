@@ -5,8 +5,12 @@ import urllib2
 
 SERVER = "https://geistwagen-hardsun.rhcloud.com/"
 LOCK = "geist.lck"
+VERSION = '120913'
 
-#TODO provide feedback to user
+def check_current_version():
+  server_version = urllib2.urlopen(SERVER+'latest_client_version').read()
+  if server_version > VERSION:
+    print "New version {0} available at {1}".format(server_version,SERVER)
 
 def get_saves_dir():
   if sys.platform == 'win32' or sys.platform == 'cygwin':
@@ -88,6 +92,7 @@ def automatic(saves_dir):
                     os.remove(bone)
 
 def main(arguments):
+  check_current_version()
   saves_dir = get_saves_dir()
   automatic(saves_dir)
 
