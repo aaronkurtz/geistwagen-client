@@ -70,14 +70,13 @@ def download_file(saves_dir, exclude):
   except:
     return False
 
-def automatic(saves_dir):  
-    bones = glob.glob(os.path.join(saves_dir,'bones.*'))
-    exclude = get_exclusions(bones)
+def automatic(saves_dir, download=True):  
+  bones = glob.glob(os.path.join(saves_dir,'bones.*'))
+  exclude = get_exclusions(bones)
   if not check_lock(saves_dir):
-    print "First time running Geistwagen, uploading bones files"
-    for bone in bones:
-        upload_file(bone)
-    download_file(saves_dir, exclude) #Everyone gets one free
+    first_upload(saves_dir)
+    if download:
+        download_file(saves_dir, exclude) #Everyone gets one free
     open(os.path.join(saves_dir,LOCK),'w').close() #geist.lock written
   else:
     print "Uploading new bones files, downloading replacements"
@@ -85,7 +84,7 @@ def automatic(saves_dir):
     os.utime(os.path.join(saves_dir, LOCK), None)
     for bone in bones:
         if os.path.getmtime(bone) > last_ran:
-            if upload_file(bone):
+            if upload_file(bone) and download:
                 dl_results = download_file(saves_dir, exclude)
                 if dl_results:
                     exclude += dl_results + '.'
@@ -94,7 +93,15 @@ def automatic(saves_dir):
 def main(arguments):
   check_current_version()
   saves_dir = get_saves_dir()
-  automatic(saves_dir)
+  if '-h' in arguments or '--help' in arguments:
+      print "GEISTWAGEN {0}".format(VERSION)
+      print SERVER
+      print "Dungeon Crawl Stone Soup bones sharing"
+      print 'Options:\n-u or --upload : upload only\n-h or --help : help'
+  elif '-u' in arguments or '--upload' in arguments:
+      automatic(saves_dir, download=False)
+  else:
+      automatic(saves_dir)
 
 #TODO start crawl
 
