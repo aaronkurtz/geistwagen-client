@@ -5,7 +5,7 @@ import urllib2
 
 SERVER = "https://geistwagen-hardsun.rhcloud.com/"
 LOCK = "geist.lck"
-VERSION = '120913'
+VERSION = '20121004'
 
 def check_current_version():
   server_version = urllib2.urlopen(SERVER+'latest_client_version').read()
@@ -92,7 +92,11 @@ def automatic(saves_dir, download=True):
 
 def main(arguments):
   check_current_version()
-  saves_dir = get_saves_dir()
+  try:
+    saves_dir = get_saves_dir()
+  except:
+    print "Crawl saves directory not found, exiting"    
+    return
   if '-h' in arguments or '--help' in arguments:
       print "GEISTWAGEN {0}".format(VERSION)
       print SERVER
