@@ -92,17 +92,18 @@ def automatic(saves_dir, download=True):
 
 def main(arguments):
   check_current_version()
-  try:
-    saves_dir = get_saves_dir()
-  except:
-    print "Crawl saves directory not found, exiting"    
-    return
   if '-h' in arguments or '--help' in arguments:
       print "GEISTWAGEN {0}".format(VERSION)
       print SERVER
       print "Dungeon Crawl Stone Soup bones sharing"
       print 'Options:\n-u or --upload : upload only\n-h or --help : help'
-  elif '-u' in arguments or '--upload' in arguments:
+      return
+  try:
+    saves_dir = get_saves_dir()
+  except:
+    print "Crawl saves directory not found, exiting"    
+    return
+  if '-u' in arguments or '--upload' in arguments:
       automatic(saves_dir, download=False)
   else:
       automatic(saves_dir)
